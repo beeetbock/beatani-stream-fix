@@ -63,6 +63,8 @@ export function AnimeInfoPopup({ anime, anchorEl, visible }: AnimeInfoPopupProps
   const description = (anime as any).description || (anime as any).synopsis || '';
   const type = (anime as any).type || (anime as any).format || 'TV Series';
   const isHD = true; // Most streams are HD
+  const coverImage = (anime as any).image || (anime as any).poster || (anime as any).cover || '';
+  const displayTitle = (anime as any).title || (anime as any).name || '';
 
   const popup = (
     <div
@@ -78,11 +80,11 @@ export function AnimeInfoPopup({ anime, anchorEl, visible }: AnimeInfoPopupProps
         )}
       >
         {/* Cover image small strip */}
-        {anime.image && (
+        {coverImage && (
           <div className="relative w-full h-28 overflow-hidden rounded-t-xl">
             <img
-              src={anime.image}
-              alt={anime.title}
+              src={coverImage}
+              alt={displayTitle}
               className="w-full h-full object-cover object-top"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#1a1a2e]/90" />
@@ -92,7 +94,7 @@ export function AnimeInfoPopup({ anime, anchorEl, visible }: AnimeInfoPopupProps
         <div className="p-4 space-y-3">
           {/* Title + badges */}
           <div>
-            <h3 className="font-bold text-white text-base leading-tight line-clamp-2">{anime.title}</h3>
+            <h3 className="font-bold text-white text-base leading-tight line-clamp-2">{displayTitle}</h3>
           </div>
 
           {/* Score + badges */}
