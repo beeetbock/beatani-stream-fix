@@ -20,14 +20,15 @@
     "noUnusedParameters": false,
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": false,
-    "baseUrl": ".",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "paths": {
       "@/components/*": [
-        "components/*"
+        "./components/*"
       ],
       "@/*": [
-        "src/*"
+        "./src/*"
       ]
     }
   },
