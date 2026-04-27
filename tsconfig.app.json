@@ -20,16 +20,19 @@
     "noUnusedParameters": false,
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": false,
+    "baseUrl": ".",
+    "types": ["node"],
     "paths": {
       "@/components/*": [
-        "../components/*"
+        "components/*"
       ],
       "@/*": [
-        "./src/*"
+        "src/*"
       ]
     }
   },
   "include": [
-    "src"
+    "src",
+    "components"
   ]
 }
