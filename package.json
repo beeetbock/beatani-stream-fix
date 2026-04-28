@@ -93,7 +93,6 @@
     "cmdk": "^1.1.1",
     "date-fns": "^3.6.0",
     "disable-devtool": "^0.3.9",
-    "discord-rpc": "^4.0.1",
     "dompurify": "^3.3.1",
     "electron-updater": "^6.7.3",
     "embla-carousel-react": "^8.6.0",
