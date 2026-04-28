@@ -54,11 +54,15 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       host: "::",
-      port: isWebMode ? 8081 : 8088, // Standard port for Electron dev
+      port: 8080,
       // Allow Discord Activity iframe to embed the app
       allowedHosts: [
+        ".lovableproject.com",
+        ".lovable.app",
+        ".onrender.com",
         "beatani.vercel.app",
         "beatani.onrender.com",
+        "beatanikai.onrender.com",
         "tatakai.me",
         "gabhasti.tech",
         ".gabhasti.tech"
