@@ -85,6 +85,7 @@
     "@sentry/tracing": "^7.120.4",
     "@supabase/supabase-js": "^2.89.0",
     "@tanstack/react-query": "^5.83.0",
+    "@vitejs/plugin-react-swc": "^3.11.0",
     "@types/dompurify": "^3.0.5",
     "axios": "^1.13.4",
     "class-variance-authority": "^0.7.1",
@@ -116,6 +117,7 @@
     "supabase": "^2.72.3",
     "tailwind-merge": "^2.6.1",
     "tailwindcss-animate": "^1.0.7",
+    "vite": "^5.4.19",
     "vaul": "^0.9.9",
     "workbox-precaching": "^7.4.0",
     "workbox-routing": "^7.4.0",
@@ -130,7 +132,6 @@
     "@types/node": "^22.16.5",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
-    "@vitejs/plugin-react-swc": "^3.11.0",
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.2.1",
     "cross-env": "^7.0.3",
@@ -146,7 +147,6 @@
     "terser": "^5.36.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
-    "vite": "^5.4.19",
     "wait-on": "^9.0.3"
   },
   "overrides": {
