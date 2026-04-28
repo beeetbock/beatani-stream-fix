@@ -15,6 +15,16 @@ export const DEVTOOLS_LOCK_STORAGE_KEY = "tatakai.devtools-trap-lock";
 export const DEVTOOLS_LOCK_STORAGE_KEY_GLOBAL = "tatakai.devtools-trap-lock-global";
 export const DEVTOOLS_LOCK_TTL_MS = 15 * 60 * 1000;
 
+function isEmbeddedPreviewFrame(): boolean {
+  if (typeof window === "undefined") return false;
+
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+}
+
 function isPrivateIpv4(hostname: string): boolean {
   const parts = hostname.split('.').map((part) => Number(part));
   if (parts.length !== 4 || parts.some((part) => !Number.isFinite(part) || part < 0 || part > 255)) {
@@ -41,6 +51,10 @@ export function isDevtoolsGuardBypassedHost(hostnameInput?: string): boolean {
   if (hostnameRaw === "localhost" || hostnameRaw === "0.0.0.0" || hostnameRaw === "::1") {
     return true;
   }
+  if (hostnameRaw === "lovable.app" || hostnameRaw.endsWith(".lovable.app")) return true;
+  if (hostnameRaw === "lovableproject.com" || hostnameRaw.endsWith(".lovableproject.com")) return true;
+  if (hostnameRaw === "gptengineer.app" || hostnameRaw.endsWith(".gptengineer.app")) return true;
+  if (isEmbeddedPreviewFrame()) return true;
   if (hostnameRaw.endsWith(".local")) return true;
   if (isPrivateIpv4(hostnameRaw)) return true;
   return false;
@@ -147,6 +161,7 @@ export function clearDevtoolsTrapState() {
 
 export function isLikelyDevtoolsOpenByViewport(threshold = 200): boolean {
   if (typeof window === "undefined") return false;
+  if (isDevtoolsGuardBypassedHost()) return false;
 
   const widthDiff = Math.abs(window.outerWidth - window.innerWidth);
   const heightDiff = Math.abs(window.outerHeight - window.innerHeight);

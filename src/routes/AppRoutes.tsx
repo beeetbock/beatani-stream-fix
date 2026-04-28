@@ -188,12 +188,16 @@ function DevtoolsRouteEnforcer() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    if (location.pathname.startsWith('/devtools-blocked')) return;
 
     if (isDevtoolsGuardBypassedHost()) {
       clearDevtoolsTrapState();
+      if (location.pathname.startsWith('/devtools-blocked')) {
+        navigate('/', { replace: true });
+      }
       return;
     }
+
+    if (location.pathname.startsWith('/devtools-blocked')) return;
 
     if (isDevtoolsLockActive()) {
       navigate(`/devtools-blocked?locked=${Date.now()}`, { replace: true });
