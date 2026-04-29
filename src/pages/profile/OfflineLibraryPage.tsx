@@ -205,7 +205,7 @@ export default function OfflineLibraryPage() {
                     </div>
                     <h1 className="text-3xl font-bold">Native Feature</h1>
                     <p className="text-muted-foreground">
-                        The offline library is only available in the Tatakai Desktop and Mobile apps.
+                        The offline library is only available in the BeatAni Stream Desktop and Mobile apps.
                     </p>
                     <Button onClick={() => navigate('/')} className="w-full h-12 rounded-full">
                         Back to Home
@@ -460,7 +460,7 @@ export default function OfflineLibraryPage() {
                             </h3>
                             <ul className="text-xs text-muted-foreground space-y-1.5">
                                 <li>• <strong>Download:</strong> Go to any anime and click the download button</li>
-                                <li>• <strong>Sync Folder:</strong> Put video files in the Tatakai folder and click Sync</li>
+                                <li>• <strong>Sync Folder:</strong> Put video files in the BeatAni Stream folder and click Sync</li>
                                 <li>• <strong>Import:</strong> Select video files from anywhere on your computer</li>
                             </ul>
                             <Button 

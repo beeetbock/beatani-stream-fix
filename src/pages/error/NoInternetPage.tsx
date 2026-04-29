@@ -82,7 +82,7 @@ export default function NoInternetPage({ isNative = false }: NoInternetPageProps
           <div className="mb-10">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg overflow-hidden">
-                <img src="/tatakai-logo-square.png" alt="Tatakai logo" className="w-full h-full object-cover" />
+                <img src="/tatakai-logo-square.png" alt="BeatAni Stream logo" className="w-full h-full object-cover" />
               </div>
               <h1 className="font-display text-3xl font-bold gradient-text">BeatAni</h1>
             </div>

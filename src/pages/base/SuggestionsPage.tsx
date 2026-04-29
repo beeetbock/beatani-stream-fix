@@ -151,7 +151,7 @@ export default function SuggestionsPage() {
             Suggestions
           </h1>
           <p className="text-muted-foreground">
-            Help us improve Tatakai by sharing your ideas and feedback
+            Help us improve BeatAni Stream by sharing your ideas and feedback
           </p>
         </div>
 

@@ -263,9 +263,9 @@ export default function AnimePage() {
     <>
       {/* SEO Meta Tags */}
       <Helmet>
-        <title>{info.name} - Watch Online | Tatakai</title>
+        <title>{info.name} - Watch Online | BeatAni Stream</title>
         <meta name="description" content={info.description?.slice(0, 160) || `Watch ${info.name} online for free with subtitles.`} />
-        <meta property="og:title" content={`${info.name} - Watch Online | Tatakai`} />
+        <meta property="og:title" content={`${info.name} - Watch Online | BeatAni Stream`} />
         <meta property="og:description" content={info.description?.slice(0, 160) || `Watch ${info.name} online.`} />
         <meta property="og:image" content={info.poster} />
         <meta property="og:type" content="video.other" />
