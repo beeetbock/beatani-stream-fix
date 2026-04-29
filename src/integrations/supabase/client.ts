@@ -5,12 +5,25 @@ import type { Database } from './types';
 const VITE_SUPABASE_URL = String(import.meta.env.VITE_SUPABASE_URL || '').trim();
 const SUPABASE_PUBLISHABLE_KEY = String(import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
 
+function isValidHttpUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 // Fallback to a no-op client when Supabase is not configured so the app
 // can still render in offline / self-hosted deployments without crashing.
-const SUPABASE_URL = VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
+const SUPABASE_URL = isValidHttpUrl(VITE_SUPABASE_URL)
+  ? VITE_SUPABASE_URL
+  : 'https://placeholder.supabase.co';
 const SUPABASE_KEY = SUPABASE_PUBLISHABLE_KEY || 'placeholder-anon-key';
 
-export const isSupabaseConfigured = Boolean(VITE_SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
+export const isSupabaseConfigured = Boolean(
+  isValidHttpUrl(VITE_SUPABASE_URL) && SUPABASE_PUBLISHABLE_KEY
+);
 
 if (!isSupabaseConfigured) {
   console.warn(
