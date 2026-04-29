@@ -151,7 +151,8 @@ export default function WatchPage() {
     // Load saved language preference from continue watching
     const savedHistory = getLocalContinueWatching();
     const saved = savedHistory.find(h => h.episodeId === decodeURIComponent(episodeId || ''));
-    return saved?.languageCode || null;
+    // Default to Hindi ("hi") when the user has no saved preference.
+    return saved?.languageCode || "hi";
   });
   const [selectedProviderServerKey, setSelectedProviderServerKey] = useState<string | null>(null);
   const [preferredServerName, setPreferredServerName] = useState<string | null>(() => {
