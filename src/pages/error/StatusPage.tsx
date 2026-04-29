@@ -199,8 +199,8 @@ export default function StatusPage() {
     down: 0,
   });
   const [services, setServices] = useState<ServiceStatus[]>([
-    { name: 'Tatakai Website', status: 'checking', icon: <Globe className="w-5 h-5" />, description: 'Main website frontend', url: window.location.origin },
-    { name: 'Tatakai Backend', status: 'checking', icon: <Zap className="w-5 h-5" />, description: 'Unified Hono API', url: DEFAULT_BACKEND_HEALTH_URL },
+    { name: 'BeatAni Stream Website', status: 'checking', icon: <Globe className="w-5 h-5" />, description: 'Main website frontend', url: window.location.origin },
+    { name: 'BeatAni Stream Backend', status: 'checking', icon: <Zap className="w-5 h-5" />, description: 'Unified Hono API', url: DEFAULT_BACKEND_HEALTH_URL },
     { name: 'Supabase API', status: 'checking', icon: <Database className="w-5 h-5" />, description: 'Database & Auth infrastructure' },
     { name: 'Jikan API', status: 'checking', icon: <Server className="w-5 h-5" />, description: 'MyAnimeList metadata provider', url: 'https://api.jikan.moe/v4/health' },
     { name: 'Image Assets', status: 'checking', icon: <Image className="w-5 h-5" />, description: 'Anime posters & thumbnails', url: 'https://api.waifu.pics/sfw/waifu' },
@@ -338,7 +338,7 @@ export default function StatusPage() {
       setServices(prev => prev.map(s => ({ ...s, status: 'checking' as const, latency: undefined })));
 
       // Check Tatakai Website
-      await checkService('Tatakai Website', async () => {
+      await checkService('BeatAni Stream Website', async () => {
         const start = Date.now();
         const res = await fetch(window.location.origin, { method: 'HEAD' });
         const latency = Date.now() - start;
@@ -349,7 +349,7 @@ export default function StatusPage() {
       });
 
       // Check Tatakai Backend
-      await checkService('Tatakai Backend', async () => {
+      await checkService('BeatAni Stream Backend', async () => {
         const start = Date.now();
         try {
           const res = await fetch(backendHealthEndpoint, {
@@ -633,7 +633,7 @@ export default function StatusPage() {
                   <h1 className="font-display text-2xl md:text-4xl font-bold tracking-tight">{overallStatus}</h1>
                   <p className="text-muted-foreground mt-1 flex items-center gap-2">
                     <Activity className="w-4 h-4 text-primary" />
-                    Tatakai Network Infrastructure Dashboard
+                    BeatAni Stream Network Infrastructure Dashboard
                   </p>
                 </div>
               </div>

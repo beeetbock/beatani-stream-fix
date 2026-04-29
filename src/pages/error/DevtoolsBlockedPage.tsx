@@ -214,7 +214,7 @@ export default function DevtoolsBlockedPage() {
           <div className="flex items-start gap-3">
             <Shield className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
             <p className="text-zinc-300 text-sm leading-relaxed">
-              Tatakai has detected that developer tools are open. For security reasons,
+              BeatAni Stream has detected that developer tools are open. For security reasons,
               the application cannot run while the developer console is active.
             </p>
           </div>
