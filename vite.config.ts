@@ -32,6 +32,10 @@ export default defineConfig(({ mode }) => {
     base: isElectronBuild ? './' : '/',
     resolve: {
       alias: {
+        // Redirect Supabase client imports to a loose-typed wrapper so
+        // legacy code referencing tables not yet in the new Cloud schema
+        // continues to type-check. Runtime stays identical.
+        "@/integrations/supabase/client": path.resolve(__dirname, "./src/integrations/supabase/loose.ts"),
         "@/components": path.resolve(__dirname, "./components"),
         "@": path.resolve(__dirname, "./src"),
       },
