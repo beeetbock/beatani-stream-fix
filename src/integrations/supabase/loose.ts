@@ -5,4 +5,4 @@
 import { supabase as _supabase } from "./client";
 
 export const supabase: any = _supabase as any;
-export type { Database, Json } from "./types";
+export { isSupabaseConfigured } from "./client";
