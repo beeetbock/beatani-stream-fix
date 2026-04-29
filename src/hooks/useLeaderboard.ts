@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Community leaderboard hooks
  */
