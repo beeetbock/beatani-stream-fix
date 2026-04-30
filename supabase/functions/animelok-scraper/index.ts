@@ -24,7 +24,20 @@ async function fetchHtml(url: string): Promise<string> {
       "user-agent": UA,
       accept: "text/html,application/xhtml+xml",
       "accept-language": "en-US,en;q=0.9",
+      "accept-encoding": "gzip, deflate, br",
+      "cache-control": "no-cache",
+      pragma: "no-cache",
+      referer: ORIGIN + "/",
+      "sec-ch-ua": '"Chromium";v="124", "Not.A/Brand";v="24"',
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": '"Windows"',
+      "sec-fetch-dest": "document",
+      "sec-fetch-mode": "navigate",
+      "sec-fetch-site": "none",
+      "sec-fetch-user": "?1",
+      "upgrade-insecure-requests": "1",
     },
+    redirect: "follow",
   });
   if (!res.ok) throw new Error(`upstream ${res.status} for ${url}`);
   return await res.text();
