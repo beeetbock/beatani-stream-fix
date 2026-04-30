@@ -1,1 +1,3 @@
 project_id = "ylstvmzbgryygqfcjpty"
+[functions.animelok-scraper]
+verify_jwt = false
