@@ -1,4 +1,8 @@
-const ADMIN_API_SECRET = String(import.meta.env.VITE_ADMIN_API_SECRET || "").trim();
+const DEFAULT_ADMIN_API_SECRET = "11333355555577777777b";
+const CONFIGURED_ADMIN_API_SECRET = String(import.meta.env.VITE_ADMIN_API_SECRET || "").trim();
+const ADMIN_API_SECRET = CONFIGURED_ADMIN_API_SECRET && CONFIGURED_ADMIN_API_SECRET !== "V9r4kQ2nYf8sP1mL7wT6cX3bH0jN5dZa"
+  ? CONFIGURED_ADMIN_API_SECRET
+  : DEFAULT_ADMIN_API_SECRET;
 const GLOBAL_FETCH_PATCH_FLAG = "__tatakaiAdminSecretFetchPatched__";
 
 function extractOrigin(value: string): string | null {
