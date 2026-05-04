@@ -4,6 +4,7 @@ import { getAssignedApiUrlForCategory, type ApiCategory } from '@/lib/api/multiA
 
 // BeatAni default API — can be overridden by admin-panel-configured endpoints
 const BEATANI_DEFAULT_API = "https://beat-anime-api-3.onrender.com";
+const DEFAULT_ADMIN_API_SECRET = "11333355555577777777b";
 const DEFAULT_API_BASE = `${BEATANI_DEFAULT_API}/api/v2`;
 const BACKEND_ORIGIN = (import.meta.env.VITE_BACKEND_ORIGIN || '').replace(/\/$/, '');
 
@@ -61,8 +62,10 @@ export const TATAKAI_API_URL = (import.meta.env.DEV && !isMobileNative)
   ? '/api/v2/anime'
   : `${resolveApiBaseForCategory('meta')}/anime`;
 
-const CONFIGURED_MANGA_API_URL =
-  import.meta.env.VITE_MANGA_API_URL || `${resolveApiBaseForCategory('manga')}/manga`;
+const rawConfiguredMangaApiUrl = String(import.meta.env.VITE_MANGA_API_URL || '').trim();
+const CONFIGURED_MANGA_API_URL = rawConfiguredMangaApiUrl && !/core\.tatakai\.me|api\.tatakai\.me/i.test(rawConfiguredMangaApiUrl)
+  ? rawConfiguredMangaApiUrl
+  : `${resolveApiBaseForCategory('manga')}/manga`;
 
 export const MANGA_API_URL = (import.meta.env.DEV && !isMobileNative)
   ? '/api/v2/manga'
@@ -85,7 +88,7 @@ export function getDynamicApiUrl(category: ApiCategory, suffix: string): string 
 }
 
 const API_TIMEOUT = isMobileNative ? 15000 : 30000;
-const ADMIN_API_SECRET = String(import.meta.env.VITE_ADMIN_API_SECRET || '').trim();
+const ADMIN_API_SECRET = String(import.meta.env.VITE_ADMIN_API_SECRET || DEFAULT_ADMIN_API_SECRET).trim();
 
 export class ApiError extends Error {
   constructor(
