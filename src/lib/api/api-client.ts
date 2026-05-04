@@ -88,7 +88,10 @@ export function getDynamicApiUrl(category: ApiCategory, suffix: string): string 
 }
 
 const API_TIMEOUT = isMobileNative ? 15000 : 30000;
-const ADMIN_API_SECRET = String(import.meta.env.VITE_ADMIN_API_SECRET || DEFAULT_ADMIN_API_SECRET).trim();
+const CONFIGURED_ADMIN_API_SECRET = String(import.meta.env.VITE_ADMIN_API_SECRET || '').trim();
+const ADMIN_API_SECRET = CONFIGURED_ADMIN_API_SECRET && CONFIGURED_ADMIN_API_SECRET !== 'V9r4kQ2nYf8sP1mL7wT6cX3bH0jN5dZa'
+  ? CONFIGURED_ADMIN_API_SECRET
+  : DEFAULT_ADMIN_API_SECRET;
 
 export class ApiError extends Error {
   constructor(
