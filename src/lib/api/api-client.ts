@@ -55,36 +55,22 @@ const isMobileNative = typeof window !== 'undefined' &&
 // BeatAni Multi-API: resolve per-category base at call time for live load balancing.
 // These static exports remain for legacy compatibility; services should prefer
 // resolveApiBaseForCategory() for per-request load balancing.
-export const API_URL = (import.meta.env.DEV && !isMobileNative)
-  ? '/api/tatakai'
-  : `${resolveApiBaseForCategory('anime')}/hianime`;
-
-export const TATAKAI_API_URL = (import.meta.env.DEV && !isMobileNative)
-  ? '/api/v2/anime'
-  : `${resolveApiBaseForCategory('meta')}/anime`;
+// Always use the absolute backup API URL. The adapter in
+// `backupApiAdapter.ts` translates legacy hianime/anime routes to the
+// backup's real endpoints, and the backup host serves permissive CORS so
+// the browser can hit it directly without a dev proxy.
+export const API_URL = `${resolveApiBaseForCategory('anime')}/hianime`;
+export const TATAKAI_API_URL = `${resolveApiBaseForCategory('meta')}/anime`;
 
 const rawConfiguredMangaApiUrl = String(import.meta.env.VITE_MANGA_API_URL || '').trim();
 const CONFIGURED_MANGA_API_URL = rawConfiguredMangaApiUrl && !/core\.tatakai\.me|api\.tatakai\.me/i.test(rawConfiguredMangaApiUrl)
   ? rawConfiguredMangaApiUrl
   : `${resolveApiBaseForCategory('manga')}/manga`;
 
-export const MANGA_API_URL = (import.meta.env.DEV && !isMobileNative)
-  ? '/api/v2/manga'
-  : CONFIGURED_MANGA_API_URL;
+export const MANGA_API_URL = CONFIGURED_MANGA_API_URL;
 
 /** Dynamic per-request API getter — use this for load-balanced calls */
 export function getDynamicApiUrl(category: ApiCategory, suffix: string): string {
-  if (import.meta.env.DEV && !isMobileNative) {
-    const devPaths: Record<ApiCategory, string> = {
-      anime: '/api/tatakai',
-      meta: '/api/v2/anime',
-      manga: '/api/v2/manga',
-      search: '/api/tatakai',
-      video: '/api/tatakai',
-      general: '/api/tatakai',
-    };
-    return `${devPaths[category]}${suffix}`;
-  }
   return `${resolveApiBaseForCategory(category)}${suffix}`;
 }
 
