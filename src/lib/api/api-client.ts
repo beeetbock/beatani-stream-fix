@@ -237,7 +237,12 @@ export async function baseApiGet<T>(
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), options.timeoutMs);
 
-        const response = await fetch(proxy.url, { headers, signal: controller.signal });
+        // Compatibility adapter: translate legacy hianime/anime paths on the
+        // backup API host to the backup's own routes and reshape the JSON.
+        const translation = translateBackupRequest(proxy.url);
+        const requestUrl = translation ? translation.url : proxy.url;
+
+        const response = await fetch(requestUrl, { headers, signal: controller.signal });
         clearTimeout(timeoutId);
 
         if (!response.ok) {
@@ -245,6 +250,9 @@ export async function baseApiGet<T>(
         }
 
         const json = await response.json();
+        if (translation) {
+          return translation.transform(json) as T;
+        }
         return unwrapApiData<T>(json);
       } catch (error) {
         lastError = error as Error;
