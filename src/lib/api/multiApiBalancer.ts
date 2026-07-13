@@ -18,7 +18,7 @@ export type ApiEndpoint = {
 export type ApiCategory = 'anime' | 'manga' | 'search' | 'video' | 'meta' | 'general';
 
 const STORAGE_KEY = 'beatani_api_endpoints';
-const DEFAULT_API = 'https://beat-anime-api-3.onrender.com';
+const DEFAULT_API = 'https://beat-anime-api-backup.onrender.com';
 
 // Round-robin cursors per category
 const categoryCursors: Record<ApiCategory, number> = {
