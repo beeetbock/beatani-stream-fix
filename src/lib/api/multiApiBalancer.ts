@@ -19,6 +19,11 @@ export type ApiCategory = 'anime' | 'manga' | 'search' | 'video' | 'meta' | 'gen
 
 const STORAGE_KEY = 'beatani_api_endpoints';
 const DEFAULT_API = 'https://beat-anime-api-backup.onrender.com';
+const STALE_API_HOSTS = [
+  'beat-anime-api-3.onrender.com',
+  'api.tatakai.me',
+  'core.tatakai.me',
+];
 
 // Round-robin cursors per category
 const categoryCursors: Record<ApiCategory, number> = {
@@ -35,7 +40,10 @@ function loadEndpoints(): ApiEndpoint[] {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as ApiEndpoint[];
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        const cleaned = parsed.filter((e) => !STALE_API_HOSTS.some((h) => e.url.includes(h)));
+        if (cleaned.length > 0) return cleaned;
+      }
     }
   } catch {
     // ignore parse errors
