@@ -3,8 +3,8 @@ import { isApiCryptoEnabled, generateApiSignature } from '@/lib/apiCrypto';
 import { getAssignedApiUrlForCategory, type ApiCategory } from '@/lib/api/multiApiBalancer';
 
 // BeatAni default API — can be overridden by admin-panel-configured endpoints
-const BEATANI_DEFAULT_API = "https://beat-anime-api-3.onrender.com";
-const DEFAULT_ADMIN_API_SECRET = "11333355555577777777b";
+const BEATANI_DEFAULT_API = "https://beat-anime-api-backup.onrender.com";
+const DEFAULT_ADMIN_API_SECRET = "beatanime_X7QvK8mP2Lr9NwT5YcA";
 const DEFAULT_API_BASE = `${BEATANI_DEFAULT_API}/api/v2`;
 const BACKEND_ORIGIN = (import.meta.env.VITE_BACKEND_ORIGIN || '').replace(/\/$/, '');
 
@@ -89,7 +89,11 @@ export function getDynamicApiUrl(category: ApiCategory, suffix: string): string 
 
 const API_TIMEOUT = isMobileNative ? 15000 : 30000;
 const CONFIGURED_ADMIN_API_SECRET = String(import.meta.env.VITE_ADMIN_API_SECRET || '').trim();
-const ADMIN_API_SECRET = CONFIGURED_ADMIN_API_SECRET && CONFIGURED_ADMIN_API_SECRET !== 'V9r4kQ2nYf8sP1mL7wT6cX3bH0jN5dZa'
+const STALE_ADMIN_SECRETS = new Set([
+  'V9r4kQ2nYf8sP1mL7wT6cX3bH0jN5dZa',
+  '11333355555577777777b',
+]);
+const ADMIN_API_SECRET = CONFIGURED_ADMIN_API_SECRET && !STALE_ADMIN_SECRETS.has(CONFIGURED_ADMIN_API_SECRET)
   ? CONFIGURED_ADMIN_API_SECRET
   : DEFAULT_ADMIN_API_SECRET;
 
