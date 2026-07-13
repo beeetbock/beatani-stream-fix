@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => {
   const backendOrigin =
     env.VITE_BACKEND_ORIGIN ||
     env.VITE_LOCAL_HIANIME_ORIGIN ||
-    'https://beat-anime-api-3.onrender.com';
+    'https://beat-anime-api-backup.onrender.com';
 
   return {
     plugins: [
