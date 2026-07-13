@@ -297,10 +297,16 @@ export async function externalApiGet<T>(baseUrl: string, path: string, retries =
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
       const headers = isTatakaiApi ? await withSignedHeaders(path) : { Accept: 'application/json' };
-      const response = await fetch(url, { headers, signal: controller.signal });
+      const translation = translateBackupRequest(url);
+      const requestUrl = translation ? translation.url : url;
+      const response = await fetch(requestUrl, {
+        headers: { ...(headers as any), 'x-api-key': BACKUP_API_KEY },
+        signal: controller.signal,
+      });
       clearTimeout(timeoutId);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return await response.json();
+      const json = await response.json();
+      return translation ? (translation.transform(json) as T) : json;
     } catch (error) {
       lastError = error as Error;
       if (attempt < retries - 1) {
