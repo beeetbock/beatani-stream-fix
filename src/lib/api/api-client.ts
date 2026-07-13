@@ -1,6 +1,7 @@
 import { getClientIdSync } from '@/hooks/useClientId';
 import { isApiCryptoEnabled, generateApiSignature } from '@/lib/apiCrypto';
 import { getAssignedApiUrlForCategory, type ApiCategory } from '@/lib/api/multiApiBalancer';
+import { translateBackupRequest, BACKUP_API_KEY } from '@/lib/api/backupApiAdapter';
 
 // BeatAni default API — can be overridden by admin-panel-configured endpoints
 const BEATANI_DEFAULT_API = "https://beat-anime-api-backup.onrender.com";
@@ -54,36 +55,22 @@ const isMobileNative = typeof window !== 'undefined' &&
 // BeatAni Multi-API: resolve per-category base at call time for live load balancing.
 // These static exports remain for legacy compatibility; services should prefer
 // resolveApiBaseForCategory() for per-request load balancing.
-export const API_URL = (import.meta.env.DEV && !isMobileNative)
-  ? '/api/tatakai'
-  : `${resolveApiBaseForCategory('anime')}/hianime`;
-
-export const TATAKAI_API_URL = (import.meta.env.DEV && !isMobileNative)
-  ? '/api/v2/anime'
-  : `${resolveApiBaseForCategory('meta')}/anime`;
+// Always use the absolute backup API URL. The adapter in
+// `backupApiAdapter.ts` translates legacy hianime/anime routes to the
+// backup's real endpoints, and the backup host serves permissive CORS so
+// the browser can hit it directly without a dev proxy.
+export const API_URL = `${resolveApiBaseForCategory('anime')}/hianime`;
+export const TATAKAI_API_URL = `${resolveApiBaseForCategory('meta')}/anime`;
 
 const rawConfiguredMangaApiUrl = String(import.meta.env.VITE_MANGA_API_URL || '').trim();
 const CONFIGURED_MANGA_API_URL = rawConfiguredMangaApiUrl && !/core\.tatakai\.me|api\.tatakai\.me/i.test(rawConfiguredMangaApiUrl)
   ? rawConfiguredMangaApiUrl
   : `${resolveApiBaseForCategory('manga')}/manga`;
 
-export const MANGA_API_URL = (import.meta.env.DEV && !isMobileNative)
-  ? '/api/v2/manga'
-  : CONFIGURED_MANGA_API_URL;
+export const MANGA_API_URL = CONFIGURED_MANGA_API_URL;
 
 /** Dynamic per-request API getter — use this for load-balanced calls */
 export function getDynamicApiUrl(category: ApiCategory, suffix: string): string {
-  if (import.meta.env.DEV && !isMobileNative) {
-    const devPaths: Record<ApiCategory, string> = {
-      anime: '/api/tatakai',
-      meta: '/api/v2/anime',
-      manga: '/api/v2/manga',
-      search: '/api/tatakai',
-      video: '/api/tatakai',
-      general: '/api/tatakai',
-    };
-    return `${devPaths[category]}${suffix}`;
-  }
   return `${resolveApiBaseForCategory(category)}${suffix}`;
 }
 
@@ -236,7 +223,12 @@ export async function baseApiGet<T>(
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), options.timeoutMs);
 
-        const response = await fetch(proxy.url, { headers, signal: controller.signal });
+        // Compatibility adapter: translate legacy hianime/anime paths on the
+        // backup API host to the backup's own routes and reshape the JSON.
+        const translation = translateBackupRequest(proxy.url);
+        const requestUrl = translation ? translation.url : proxy.url;
+
+        const response = await fetch(requestUrl, { headers, signal: controller.signal });
         clearTimeout(timeoutId);
 
         if (!response.ok) {
@@ -244,6 +236,9 @@ export async function baseApiGet<T>(
         }
 
         const json = await response.json();
+        if (translation) {
+          return translation.transform(json) as T;
+        }
         return unwrapApiData<T>(json);
       } catch (error) {
         lastError = error as Error;
@@ -262,6 +257,9 @@ export function withClientHeaders(extra: Record<string, string> = {}): Record<st
   const cid = getClientIdSync();
   if (cid) headers['X-Client-Id'] = cid;
   if (ADMIN_API_SECRET) headers['X-Admin-Secret'] = ADMIN_API_SECRET;
+  // Backup API expects `x-api-key` — send it on every call; hosts that don't
+  // require it simply ignore the extra header.
+  headers['x-api-key'] = BACKUP_API_KEY;
   return headers;
 }
 
@@ -285,10 +283,16 @@ export async function externalApiGet<T>(baseUrl: string, path: string, retries =
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
       const headers = isTatakaiApi ? await withSignedHeaders(path) : { Accept: 'application/json' };
-      const response = await fetch(url, { headers, signal: controller.signal });
+      const translation = translateBackupRequest(url);
+      const requestUrl = translation ? translation.url : url;
+      const response = await fetch(requestUrl, {
+        headers: { ...(headers as any), 'x-api-key': BACKUP_API_KEY },
+        signal: controller.signal,
+      });
       clearTimeout(timeoutId);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return await response.json();
+      const json = await response.json();
+      return translation ? (translation.transform(json) as T) : json;
     } catch (error) {
       lastError = error as Error;
       if (attempt < retries - 1) {
