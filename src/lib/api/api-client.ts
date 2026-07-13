@@ -1,6 +1,7 @@
 import { getClientIdSync } from '@/hooks/useClientId';
 import { isApiCryptoEnabled, generateApiSignature } from '@/lib/apiCrypto';
 import { getAssignedApiUrlForCategory, type ApiCategory } from '@/lib/api/multiApiBalancer';
+import { translateBackupRequest, BACKUP_API_KEY } from '@/lib/api/backupApiAdapter';
 
 // BeatAni default API — can be overridden by admin-panel-configured endpoints
 const BEATANI_DEFAULT_API = "https://beat-anime-api-backup.onrender.com";
@@ -262,6 +263,9 @@ export function withClientHeaders(extra: Record<string, string> = {}): Record<st
   const cid = getClientIdSync();
   if (cid) headers['X-Client-Id'] = cid;
   if (ADMIN_API_SECRET) headers['X-Admin-Secret'] = ADMIN_API_SECRET;
+  // Backup API expects `x-api-key` — send it on every call; hosts that don't
+  // require it simply ignore the extra header.
+  headers['x-api-key'] = BACKUP_API_KEY;
   return headers;
 }
 
